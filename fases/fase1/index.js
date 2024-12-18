@@ -1,13 +1,14 @@
 import * as monaco from 'https://cdn.jsdelivr.net/npm/monaco-editor@0.50.0/+esm';
-import {Generator} from './visitor/Generador.js';
+//  import {Generator} from './visitor/Generador.js';
 import { parse } from './parser/gramatica.js';
 import { ErrorReglas } from './parser/error.js';
-
+import { Generador } from './visitor/Generador.js';
 
 
 export let ids = []
 export let usos = []
 export let errores = []
+export let existError = true
 
 
 // Crear el editor principal
@@ -39,15 +40,11 @@ const analizar = () => {
     ids.length = 0
     usos.length = 0
     errores.length = 0
+    
     try {
         const cst = parse(entrada)
-        const generator = new Generator()
-
         
-        //pasamos a generator el cst
-        cst.forEach(enviar => enviar.accept(generator))
-        // ver si se genero el codigo
-        console.log(generator.code)
+        
         if(errores.length > 0){
             salida.setValue(
                 `Error: ${errores[0].message}`
@@ -55,6 +52,7 @@ const analizar = () => {
             return
         }else{
             salida.setValue("Análisis Exitoso");
+            existError = false
         }
 
         // salida.setValue("Análisis Exitoso");
@@ -106,11 +104,31 @@ const analizar = () => {
         
     }
 };
+// Escuchar el clic en el botón Modulo Fortran
+document.addEventListener("DOMContentLoaded", () => {
+    const moduloFButton = document.getElementById("moduloF");
+    if (moduloFButton) {
+        moduloFButton.addEventListener("click", () => {
+            
+            if (existError) {
+                return;
+            } else{
+                console.log("Botón Modulo Fortran presionado.");
+                const generator = new Generador();
+                //pasamos a generator el cst
+                cst.forEach(enviar => enviar.accept(generator))
+                existError = true
+            }
+           
+        });
+    }
+})
 
 // Escuchar cambios en el contenido del editor
 editor.onDidChangeModelContent(() => {
     analizar();
 });
+
 
 // CSS personalizado para resaltar el error y agregar un warning
 const style = document.createElement('style');
