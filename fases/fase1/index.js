@@ -46,6 +46,8 @@ const analizar = () => {
         
         //pasamos a generator el cst
         cst.forEach(enviar => enviar.accept(generator))
+        // ver si se genero el codigo
+        console.log(generator.code)
         if(errores.length > 0){
             salida.setValue(
                 `Error: ${errores[0].message}`
