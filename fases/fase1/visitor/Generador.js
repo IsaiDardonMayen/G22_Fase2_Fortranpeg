@@ -1,12 +1,11 @@
-import { writeFileSync } from 'node:fs';
-import path from 'node:path';
-import nodes from './Nodos.js';
 
 export function Generador() {
     const __dirname = path.dirname(require.main.filename);
     const classesDestination = '../lib/CST.js';
     const visitorDestination = '../lib/Interfaces/Visitor.js';
-    
+    const fs = require('fs');
+    const path = require('path');
+    const nodes = require('./Nodos.js')
 
     // Generar la clase Visitor
     let codeString = `
