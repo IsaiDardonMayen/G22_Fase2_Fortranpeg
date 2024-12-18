@@ -1,52 +1,53 @@
+const fs = require('fs');
+const path = require('path');
+const nodes = require('./Nodos.js');
 
-export function Generador() {
-    const __dirname = path.dirname(require.main.filename);
-    const classesDestination = '../lib/CST.js';
-    const visitorDestination = '../lib/Interfaces/Visitor.js';
-    const fs = require('fs');
-    const path = require('path');
-    const nodes = require('./Nodos.js')
+const __dirname = path.dirname(require.main.filename);
+const classesDestination = '../src/lib/CST.js';
+const visitorDestination = '../src/lib/Interfaces/Visitor.js';
 
-    // Generar la clase Visitor
-    let codeString = `
+let codeString = `
 // Auto-generated
+const Node = require('./Node');
+
 class Visitor {
 `;
 
-    for (const node of Object.keys(nodes)) {
-        codeString += `\tvisit${node}(node) {\n\t\tthrow new Error('visit${node} is not implemented');\n\t}\n`;
-    }
-    codeString += `}
+for (const node of Object.keys(nodes)) {
+    codeString += `\tvisit${node}(node) {\n\t\tthrow new Error("visit${node} not implemented");\n\t}\n`;
+}
+codeString += `}
 
 module.exports = Visitor;
 `;
 
-    fs.writeFileSync(path.join(__dirname, visitorDestination), codeString);
-    console.log('Generated Visitor class');
+fs.writeFileSync(path.join(__dirname, visitorDestination), codeString);
+console.log('Generated visitor Interface');
 
-    // Función para generar argumentos de los constructores
-    function printArgs(args, separator) {
-        const argKeys = Object.keys(args);
-        return argKeys
-            .map((arg) => {
-                const parts = args[arg].split('?');
-                return parts.length > 1
-                    ? `${arg} = null` // Valor por defecto para opcionales
-                    : `${arg}`;
-            })
-            .join(separator);
-    }
+function printArgs(args, separator) {
+    const argKeys = Object.keys(args);
+    return argKeys
+        .map((arg) => {
+            const parts = args[arg].split('?');
+            return parts.length > 1
+                ? `${arg} /* optional: ${parts[1]} */`
+                : `${arg}`;
+        })
+        .join(separator);
+}
 
-    // Generar las clases para los nodos
-    codeString = `
+codeString = `
 // Auto-generated
-const Visitor = require('./Interfaces/Visitor.js');
-
+const Node = require('./Interfaces/Node');
+const Visitor = require('./Interfaces/Visitor');
 `;
-    for (const [name, args] of Object.entries(nodes)) {
-        const argKeys = Object.keys(args);
-        codeString += `
+
+for (const [name, args] of Object.entries(nodes)) {
+    const argKeys = Object.keys(args);
+    codeString += `
 class ${name} {
+    ${argKeys.map((arg) => `this.${arg}; // Initialized later`).join('\n\t')}
+
     constructor(${printArgs(args, ', ')}) {
         ${argKeys.map((arg) => `this.${arg} = ${arg};`).join('\n\t\t')}
     }
@@ -55,15 +56,14 @@ class ${name} {
         if (visitor.visit${name}) {
             return visitor.visit${name}(this);
         }
-        throw new Error('Visitor does not implement visit${name}');
+        throw new Error("Visitor method visit${name} not implemented");
     }
 }
 
 module.exports.${name} = ${name};
     `;
-        console.log(`Generating ${name} node`);
-    }
-
-    fs.writeFileSync(path.join(__dirname, classesDestination), codeString);
-    console.log('Done!');
+    console.log(`Generating ${name} node`);
 }
+
+fs.writeFileSync(path.join(__dirname, classesDestination), codeString);
+console.log('Done!');
