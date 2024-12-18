@@ -1,6 +1,8 @@
 import * as monaco from 'https://cdn.jsdelivr.net/npm/monaco-editor@0.50.0/+esm';
+import {Generator} from './visitor/Generador.js';
 import { parse } from './parser/gramatica.js';
 import { ErrorReglas } from './parser/error.js';
+
 
 
 export let ids = []
@@ -14,7 +16,8 @@ const editor = monaco.editor.create(
         value: '',
         language: 'java',
         theme: 'tema',
-        automaticLayout: true
+        automaticLayout: true,
+        
     }
 );
 
@@ -38,7 +41,11 @@ const analizar = () => {
     errores.length = 0
     try {
         const cst = parse(entrada)
+        const generator = new Generator()
 
+        
+        //pasamos a generator el cst
+        cst.forEach(enviar => enviar.accept(generator))
         if(errores.length > 0){
             salida.setValue(
                 `Error: ${errores[0].message}`
