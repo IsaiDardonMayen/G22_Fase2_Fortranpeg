@@ -1,14 +1,9 @@
 {{
-    
-    // let identificadores = []
-
-    // import { identificadores } from '../index.js'
-
     import { ids, usos} from '../../index.js'
     import { ErrorReglas } from './error.js';
     import { errores } from '../../index.js'
-
     import * as n from '../visitor/CST.js';
+
 }}
 
 gramatica
@@ -65,24 +60,20 @@ expresiones
   / "."
   / "!."
 
-// conteo = "|" parteconteo _ (_ delimitador )? _ "|"
 
+// conteo = "|" parteconteo _ (_ delimitador )? _ "|"
 conteo = "|" _ (numero / id:identificador) _ "|"
         / "|" _ (numero / id:identificador)? _ ".." _ (numero / id2:identificador)? _ "|"
         / "|" _ (numero / id:identificador)? _ "," _ opciones _ "|"
         / "|" _ (numero / id:identificador)? _ ".." _ (numero / id2:identificador)? _ "," _ opciones _ "|"
 
-// parteconteo = identificador
-//             / [0-9]? _ ".." _ [0-9]?
-// 			/ [0-9]
-
-// delimitador =  "," _ expresion
 
 // Regla principal que analiza corchetes con contenido
 corchetes
     = "[" contenido:(rango / contenido)+ "]" {
         return `Entrada válida: [${input}]`;
     }
+
 
 // Regla para validar un rango como [A-Z]
 rango
@@ -94,9 +85,11 @@ rango
         return `${inicio}-${fin}`;
     }
 
+
 // Regla para caracteres individuales
 caracter
     = [a-zA-Z0-9_ ] { return text()}
+
 
 // Coincide con cualquier contenido que no incluya "]"
 contenido
@@ -137,18 +130,11 @@ escape = "'"
 
 secuenciaFinLinea = "\r\n" / "\n" / "\r" / "\u2028" / "\u2029"
 
-// literales = 
-//     "\"" [^"]* "\""
-//     / "'" [^']* "'"
-    
-
 numero = [0-9]+ 
 
 identificador = [_a-z]i[_a-z0-9]i* { return text() }
 
-
 _ = (Comentarios /[ \t\n\r])*
-
 
 Comentarios = 
     "//" [^\n]* 
