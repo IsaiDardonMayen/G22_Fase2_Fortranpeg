@@ -15,6 +15,17 @@ export class Producciones extends Node {
     }
 }
     
+export class Identificador extends Node {
+    constructor(val) {
+        super();
+        this.val = val;
+    }
+
+    accept(visitor) {
+        return visitor.visitIdentificador(this);
+    }
+}
+    
 export class Opciones extends Node {
     constructor(exprs) {
         super();

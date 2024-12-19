@@ -293,6 +293,7 @@ function peg$parse(input, options) {
   };
   var peg$f5 = function(id) {
     usos.push(id)
+    return new n.Identificador(id);
   };
   var peg$f6 = function(val, isCase) {
     return new n.String(val.replace(/['"]/g, ''), isCase);
@@ -788,7 +789,13 @@ function peg$parse(input, options) {
       s1 = null;
     }
     s2 = peg$parse_();
-    s3 = peg$parseidentificador();
+    s3 = peg$currPos;
+    s4 = peg$parseidentificador();
+    if (s4 !== peg$FAILED) {
+      s3 = input.substring(s3, peg$currPos);
+    } else {
+      s3 = s4;
+    }
     if (s3 !== peg$FAILED) {
       s4 = peg$parse_();
       if (input.charCodeAt(peg$currPos) === 58) {
@@ -835,7 +842,13 @@ function peg$parse(input, options) {
     var s0, s1, s2, s3, s4, s5;
 
     s0 = peg$currPos;
-    s1 = peg$parseidentificador();
+    s1 = peg$currPos;
+    s2 = peg$parseidentificador();
+    if (s2 !== peg$FAILED) {
+      s1 = input.substring(s1, peg$currPos);
+    } else {
+      s1 = s2;
+    }
     if (s1 !== peg$FAILED) {
       peg$savedPos = s0;
       s1 = peg$f5(s1);

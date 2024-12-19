@@ -47,13 +47,15 @@ expresion
     return new n.Expresion(expr, label, qty);
   }
 
-etiqueta = ("@")? _ id:identificador _ ":" (varios)?
+
+etiqueta = ("@")? _ id:$identificador _ ":" (varios)?
 
 varios = ("!"/"$"/"@"/"&")
 
 expresiones
-  = id:identificador {
+  = id: $identificador {
     usos.push(id)
+    return new n.Identificador(id);
   }
   / val:$literales isCase:"i"? {
     return new n.String(val.replace(/['"]/g, ''), isCase);
@@ -140,7 +142,7 @@ secuenciaFinLinea = "\r\n" / "\n" / "\r" / "\u2028" / "\u2029"
 //     / "'" [^']* "'"
     
 
-numero = [0-9]+ {return text()}
+numero = [0-9]+ 
 
 identificador = [_a-z]i[_a-z0-9]i* { return text() }
 
