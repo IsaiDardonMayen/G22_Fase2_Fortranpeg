@@ -32,20 +32,6 @@ end module tokenizer
     }
     visitIdentificador(node) {
         return `
-       if (${node.val}) then
-        integer :: start, stop
-        start = cursor
-        do while (cursor <= len(input) .and. &
-                  (input(cursor:cursor) >= 'a' .and. input(cursor:cursor) <= 'z' .or. &
-                   input(cursor:cursor) >= 'A' .and. input(cursor:cursor) <= 'Z' .or. &
-                   input(cursor:cursor) >= '0' .and. input(cursor:cursor) <= '9'))
-            cursor = cursor + 1
-        end do
-        stop = cursor - 1
-        allocate( character(len=stop - start + 1) :: lexeme )
-        lexeme = input(start:stop)
-        return
-    end if
     `;
     }
     visitOpciones(node) {
