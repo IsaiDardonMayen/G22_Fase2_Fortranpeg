@@ -4,7 +4,7 @@ export default class Tokenizer extends Visitor {
     generateTokenizer(grammar) {
         return `
 module tokenizer
-implicit none
+    implicit none
 
 contains
 function nextSym(input, cursor) result(lexeme)
