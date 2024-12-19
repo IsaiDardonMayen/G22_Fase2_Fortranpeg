@@ -73,3 +73,14 @@ export class String extends Node {
     }
 }
     
+export class Parentesis extends Node {
+    constructor(exp) {
+        super();
+        this.exp = exp;
+    }
+
+    accept(visitor) {
+        return visitor.visitParentesis(this);
+    }
+}
+    

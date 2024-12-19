@@ -55,7 +55,11 @@ expresiones
   / val:$literales isCase:"i"? {
     return new n.String(val.replace(/['"]/g, ''), isCase);
   }
-  / "(" _ opciones _ ")"
+  / "(" _ exp:$opciones _ ")" {
+    
+    return new n.Parentesis(exp.replace(/['"]/g, ''));
+  }
+
   / corchetes "i"?
   / "."
   / "!."
