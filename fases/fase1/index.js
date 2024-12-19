@@ -1,8 +1,8 @@
 import * as monaco from 'https://cdn.jsdelivr.net/npm/monaco-editor@0.50.0/+esm';
 //  import {Generator} from './visitor/Generador.js';
-import { parse } from './parser/gramatica.js';
-import { ErrorReglas } from './parser/error.js';
-import { Generador } from './visitor/Generador.js';
+import { parse } from './src/parser/gramatica.js';
+import { ErrorReglas } from './src/parser/error.js';
+import Tokenizer from './src/visitor/Tokenizer.js';
 
 
 export let ids = []
@@ -11,25 +11,26 @@ export let errores = []
 export let existError = true
 
 
+
 // Crear el editor principal
 const editor = monaco.editor.create(
     document.getElementById('editor'), {
-        value: '',
-        language: 'java',
-        theme: 'tema',
-        automaticLayout: true,
-        
-    }
+    value: '',
+    language: 'java',
+    theme: 'tema',
+    automaticLayout: true,
+
+}
 );
 
 // Crear el editor para la salida
 const salida = monaco.editor.create(
     document.getElementById('salida'), {
-        value: '',
-        language: 'java',
-        readOnly: true,
-        automaticLayout: true
-    }
+    value: '',
+    language: 'java',
+    readOnly: true,
+    automaticLayout: true
+}
 );
 
 let decorations = [];
@@ -40,17 +41,17 @@ const analizar = () => {
     ids.length = 0
     usos.length = 0
     errores.length = 0
-    
+
     try {
         const cst = parse(entrada)
-        
-        
-        if(errores.length > 0){
+
+
+        if (errores.length > 0) {
             salida.setValue(
                 `Error: ${errores[0].message}`
             );
             return
-        }else{
+        } else {
             salida.setValue("Análisis Exitoso");
             existError = false
         }
@@ -58,17 +59,26 @@ const analizar = () => {
         // salida.setValue("Análisis Exitoso");
         // Limpiar decoraciones previas si la validación es exitosa
         decorations = editor.deltaDecorations(decorations, []);
+
+        // Generar el código de salida
+
+        const tokenizer = new Tokenizer();
+        const fileContents = tokenizer.generateTokenizer(cst);
+        const blob = new Blob([fileContents], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const button = document.getElementById('moduloF');
+        button.href = url;
     } catch (e) {
 
-        if(e.location === undefined){
-            
+        if (e.location === undefined) {
+
             salida.setValue(
                 `Error: ${e.message}`
             );
 
-        }else {
+        } else {
 
-        
+
 
             // Mostrar mensaje de error en el editor de salida
             salida.setValue(
@@ -79,9 +89,9 @@ const analizar = () => {
             decorations = editor.deltaDecorations(decorations, [
                 {
                     range: new monaco.Range(
-                        e.location.start.line, 
-                        e.location.start.column, 
-                        e.location.start.line, 
+                        e.location.start.line,
+                        e.location.start.column,
+                        e.location.start.line,
                         e.location.start.column + 1
                     ),
                     options: {
@@ -90,9 +100,9 @@ const analizar = () => {
                 },
                 {
                     range: new monaco.Range(
-                        e.location.start.line, 
-                        e.location.start.column, 
-                        e.location.start.line, 
+                        e.location.start.line,
+                        e.location.start.column,
+                        e.location.start.line,
                         e.location.start.column
                     ),
                     options: {
@@ -101,28 +111,12 @@ const analizar = () => {
                 }
             ]);
         }
-        
+
     }
 };
 // Escuchar el clic en el botón Modulo Fortran
-document.addEventListener("DOMContentLoaded", () => {
-    const moduloFButton = document.getElementById("moduloF");
-    if (moduloFButton) {
-        moduloFButton.addEventListener("click", () => {
-            
-            if (existError) {
-                return;
-            } else{
-                console.log("Botón Modulo Fortran presionado.");
-                const generator = new Generador();
-                //pasamos a generator el cst
-                cst.forEach(enviar => enviar.accept(generator))
-                existError = true
-            }
-           
-        });
-    }
-})
+
+
 
 // Escuchar cambios en el contenido del editor
 editor.onDidChangeModelContent(() => {
