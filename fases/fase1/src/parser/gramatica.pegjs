@@ -60,7 +60,10 @@ expresiones
     return new n.Parentesis(exp.replace(/['"]/g, ''));
   }
 
-  / corchetes "i"?
+  / exp:corchetes "i"? {
+    return new n.Corchetes(exp);
+  }
+
   / "."
   / "!."
 
@@ -75,7 +78,8 @@ conteo = "|" _ (numero / id:identificador) _ "|"
 // Regla principal que analiza corchetes con contenido
 corchetes
     = "[" contenido:(rango / contenido)+ "]" {
-        return `Entrada válida: [${input}]`;
+      //console.log(contenido)
+        return contenido;
     }
 
 
@@ -100,7 +104,7 @@ contenido
     = (corchete / texto)+
 
 corchete
-    = "[" contenido "]"
+    = "[" contenido "]" 
 
 texto
     = [^\[\]]+
@@ -134,7 +138,7 @@ escape = "'"
 
 secuenciaFinLinea = "\r\n" / "\n" / "\r" / "\u2028" / "\u2029"
 
-numero = [0-9]+ 
+numero = [0-9]+ { return text() }
 
 identificador = [_a-z]i[_a-z0-9]i* { return text() }
 

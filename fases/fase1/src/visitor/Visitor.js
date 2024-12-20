@@ -8,4 +8,5 @@ export default class Visitor {
 	visitExpresion(node) {}
 	visitString(node) {}
 	visitParentesis(node) {}
+	visitCorchetes(node) {}
 }

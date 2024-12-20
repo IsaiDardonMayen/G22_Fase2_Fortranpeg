@@ -6,6 +6,7 @@
         Expresion: ['expr', 'label', 'qty'],
         String: ['val', 'isCase'],
         Parentesis: ['exp'],
+        Corchetes: ['exp'],
         
         
     };

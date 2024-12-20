@@ -84,3 +84,14 @@ export class Parentesis extends Node {
     }
 }
     
+export class Corchetes extends Node {
+    constructor(exp) {
+        super();
+        this.exp = exp;
+    }
+
+    accept(visitor) {
+        return visitor.visitCorchetes(this);
+    }
+}
+    
