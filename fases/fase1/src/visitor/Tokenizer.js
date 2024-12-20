@@ -88,4 +88,18 @@ end module tokenizer
         `;
     }
 
+    visitParentesis(node) {
+        
+        return `
+    if ("${node.exp}" == input(cursor:cursor + ${
+            node.exp.length - 1
+        })) then !Foo
+        allocate( character(len=${node.exp.length}) :: lexeme)
+        lexeme = input(cursor:cursor + ${node.exp.length - 1})
+        cursor = cursor + ${node.exp.length}
+        return
+    end if
+        `;
+    }
+
 }

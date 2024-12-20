@@ -8,6 +8,7 @@
         String: ['val', 'isCase'],
         Clase: ['chars', 'isCase'],
         Rango: ['bottom', 'top'],
+        Parentesis: ['exp'],
           
     };
 

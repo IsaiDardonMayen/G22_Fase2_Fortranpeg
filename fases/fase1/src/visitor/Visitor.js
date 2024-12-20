@@ -9,4 +9,5 @@ export default class Visitor {
 	visitString(node) {}
 	visitClase(node) {}
 	visitRango(node) {}
+	visitParentesis(node) {}
 }
