@@ -1,13 +1,14 @@
 {{
-    import { ids, usos} from '../../index.js'
-    import { ErrorReglas } from './error.js';
-    import { errores } from '../../index.js'
-    import * as n from '../visitor/CST.js';
+    
+import { ids, usos} from '../../index.js'
+import { ErrorReglas } from './error.js';
+import { errores } from '../../index.js'
+
+import * as n from '../visitor/CST.js';
 
 }}
 
-gramatica
-  = _ prods:producciones+ _ {
+gramatica = _ prods:producciones+ _ {
     let duplicados = ids.filter((item, index) => ids.indexOf(item) !== index);
     if (duplicados.length > 0) {
         errores.push(new ErrorReglas("Regla duplicada: " + duplicados[0]));
@@ -21,54 +22,41 @@ gramatica
     return prods;
   }
 
-producciones
-  = _ id:identificador _ alias:(literales)? _ "=" _ expr:opciones (_";")? {
+producciones = _ id:identificador _ alias:(literales)? _ "=" _ expr:opciones (_";")? {
     ids.push(id);
     return new n.Producciones(id, expr, alias);
   }
 
-opciones
-  = expr:union rest:(_ "/" _ @union)* {
+opciones = expr:union rest:(_ "/" _ @union)* {
     return new n.Opciones([expr, ...rest]);
   }
 
-union
-  = expr:expresion rest:(_ @expresion !(_ literales? _ "=") )* {
+union = expr:expresion rest:(_ @expresion !(_ literales? _ "=") )* {
     return new n.Union([expr, ...rest]);
   }
 
-expresion
-  = label:$(etiqueta/varios)? _ expr:expresiones _ qty:$([?+*]/conteo)? {
+expresion = label:$(etiqueta/varios)? _ expr:expresiones _ qty:$([?+*]/conteo)? {
     return new n.Expresion(expr, label, qty);
   }
 
-
-etiqueta = ("@")? _ id:$identificador _ ":" (varios)?
+etiqueta = ("@")? _ id:identificador _ ":" (varios)?
 
 varios = ("!"/"$"/"@"/"&")
 
-expresiones
-  = id: $identificador {
+expresiones = id:identificador {
     usos.push(id)
-    return new n.Identificador(id);
   }
   / val:$literales isCase:"i"? {
     return new n.String(val.replace(/['"]/g, ''), isCase);
   }
-  / "(" _ exp:$opciones _ ")" {
-    
-    return new n.Parentesis(exp.replace(/['"]/g, ''));
+  / "(" _ opciones _ ")"
+  / chars:clase isCase:"i"? {
+    return new n.Clase(chars, isCase)
   }
-
-  / exp:corchetes "i"? {
-    return new n.Corchetes(exp);
-  }
-
   / "."
   / "!."
 
 
-// conteo = "|" parteconteo _ (_ delimitador )? _ "|"
 conteo = "|" _ (numero / id:identificador) _ "|"
         / "|" _ (numero / id:identificador)? _ ".." _ (numero / id2:identificador)? _ "|"
         / "|" _ (numero / id:identificador)? _ "," _ opciones _ "|"
@@ -76,38 +64,12 @@ conteo = "|" _ (numero / id:identificador) _ "|"
 
 
 // Regla principal que analiza corchetes con contenido
-corchetes
-    = "[" contenido:(rango / contenido)+ "]" {
-      //console.log(contenido)
-        return contenido;
-    }
+clase = "[" @contenidoClase+ "]"
 
-
-// Regla para validar un rango como [A-Z]
-rango
-    = inicio:caracter "-" fin:caracter {
-        if (inicio.charCodeAt(0) > fin.charCodeAt(0)) {
-            throw new Error(`Rango inválido: [${inicio}-${fin}]`);
-
-        }
-        return `${inicio}-${fin}`;
-    }
-
-
-// Regla para caracteres individuales
-caracter
-    = [a-zA-Z0-9_ ] { return text()}
-
-
-// Coincide con cualquier contenido que no incluya "]"
-contenido
-    = (corchete / texto)+
-
-corchete
-    = "[" contenido "]" 
-
-texto
-    = [^\[\]]+
+contenidoClase = bottom:$[^\[\]] "-" top:$[^\[\]] {
+    return new n.Rango(bottom, top);
+  }
+  / $[^\[\]]
 
 literales
   = '"' @stringDobleComilla* '"'
@@ -138,7 +100,7 @@ escape = "'"
 
 secuenciaFinLinea = "\r\n" / "\n" / "\r" / "\u2028" / "\u2029"
 
-numero = [0-9]+ { return text() }
+numero = [0-9]+
 
 identificador = [_a-z]i[_a-z0-9]i* { return text() }
 
@@ -146,4 +108,4 @@ _ = (Comentarios /[ \t\n\r])*
 
 Comentarios = 
     "//" [^\n]* 
-    / "/*" (!"*/" .)* "*/"
+    / "/" (!"/" .)* "*/"
