@@ -1,15 +1,21 @@
 import Visitor from "../visitor/Visitor.js";
 import * as Syntax from "./SyntaxsTree.js"
-import * as CST from "../visitor/CST.js"
+
+
 export default class SyntaxsTreeVisitor extends Visitor {
     visitProducciones(node) {
         return node.expr.accept(this);
     }
 	visitOpciones(node) {
-        return node.exprs.map((expr) => node.accept(this));
+        return node.exprs
+        .map((expr) => node.accept(this))
+        .reduce((subTree, curr) => new Syntax.Or(subTree, curr));
     }
+
 	visitUnion(node) {
-       retur
+        return node.exprs
+        .map((expr) => expr.accept(this))
+        .reduce((subTree, curr) => new Syntax.Or(subTree, curr));
     }
 	visitExpresion(node) {
         switch(node.qty){
@@ -24,11 +30,17 @@ export default class SyntaxsTreeVisitor extends Visitor {
         }
     }
 	visitString(node) {
-        return new Syntax.Hoja(node.val, node.isCase)
+        return new Syntax.Hoja(node.val)
     }
-	visitClase(node) {}
-	visitRango(node) {}
-	visitParentesis(node) {}
+	visitClase(node) {
+        return new Syntax.Hoja(node.chars.join(''))
+    }
+	visitRango(node) {
+        return `${node.bottom}-${node.top}`;
+    }
+	visitIdentificador(node) {}
+    visitPunto(node) {}
+    visitFin(node) {}
 
 }
    

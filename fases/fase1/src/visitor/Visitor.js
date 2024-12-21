@@ -10,4 +10,6 @@ export default class Visitor {
 	visitClase(node) {}
 	visitRango(node) {}
 	visitParentesis(node) {}
+	visitPunto(node) {}
+	visitFin(node) {}
 }

@@ -1,7 +1,5 @@
 class Node{
     constructor(){
-        this.firsts = null
-        this.lasts= null
         this.nullable = null        
     }
 
@@ -15,20 +13,25 @@ class Node{
     */
         
     lastPos(){}
+    /**
+     * @returns {boolean}
+    */
     nullable(){}
 }
 
 class Hoja extends Node{
+    /** @type {number} */
     pos;
-    nullable;
+    /** @type {string} */
+    val;
+
     /**
-     * 
-     * @param {number}pos
-    */
-    constructor(pos){
+     *
+     * @param {string} val
+     */
+    constructor(val){
         super()
-        this.pos = pos
-        this.nullable = false
+        this.val=val
     }
     /**
      * @returns {number[]}
@@ -105,7 +108,7 @@ class Or extends Node{
      * @param {Node} c2 
      */
     constructor(c1, c2){
-        super()
+        
         this.c1 = c1
         this.c2 = c2
     }
@@ -143,7 +146,7 @@ class ZeroOrMore extends Node{
      * @param {Node} c1 
      */
     constructor(c1){
-        super()
+        
         this.c1 = c1
     }
      /**
@@ -178,7 +181,7 @@ class OneOrMore extends Node{
      * @param {Node} c1 
      */
     constructor(c1){
-        super()
+       
         this.c1 = c1
     }
      /**
@@ -213,7 +216,7 @@ class Option extends Node{
      * @param {Node} c1 
      */
     constructor(c1){
-        super()
+       
         this.c1 = c1
     }
      /**

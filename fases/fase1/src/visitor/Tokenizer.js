@@ -32,6 +32,9 @@ end module tokenizer
     visitProducciones(node) {
         return node.expr.accept(this);
     }
+    visitIdentificador(node) {
+        return '';
+    }
     visitOpciones(node) {
         return node.exprs.map((node) => node.accept(this)).join('\n');
     }
@@ -100,6 +103,12 @@ end module tokenizer
         return
     end if
         `;
+    }
+    visitPunto(node) {
+        return '';
+    }
+    visitFin(node) {
+        return '';
     }
 
 }

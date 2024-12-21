@@ -45,6 +45,7 @@ varios = ("!"/"$"/"@"/"&")
 
 expresiones = id:identificador {
     usos.push(id)
+    return new n.Identificador(id);
   }
   / val:$literales isCase:"i"? {
     return new n.String(val.replace(/['"]/g, ''), isCase);
@@ -55,8 +56,12 @@ expresiones = id:identificador {
   / chars:clase isCase:"i"? {
     return new n.Clase(chars, isCase)
   }
-  / "."
-  / "!."
+  / "." {
+    return new n.Punto();
+  }
+  / "!." {
+    return new n.Fin();
+  }
 
 
 conteo = "|" _ (numero / id:identificador) _ "|"
@@ -68,10 +73,14 @@ conteo = "|" _ (numero / id:identificador) _ "|"
 // Regla principal que analiza corchetes con contenido
 clase = "[" @contenidoClase+ "]"
 
-contenidoClase = bottom:$[^\[\]] "-" top:$[^\[\]] {
+contenidoClase = bottom:$caracter "-" top:$caracter {
     return new n.Rango(bottom, top);
   }
-  / $[^\[\]]
+  / $caracter
+
+caracter 
+  = [^\[\]\\]
+  / "\\" .
 
 literales
   = '"' @stringDobleComilla* '"'

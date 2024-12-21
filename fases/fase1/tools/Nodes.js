@@ -9,6 +9,8 @@
         Clase: ['chars', 'isCase'],
         Rango: ['bottom', 'top'],
         Parentesis: ['exp'],
+        Punto: [],
+        Fin: [],
           
     };
 
