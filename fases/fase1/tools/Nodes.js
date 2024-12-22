@@ -8,9 +8,10 @@
         String: { val: 'string', isCase: '?boolean' },
         Clase: { chars: '(string|Rango)[]', isCase: '?boolean' },
         Rango: { bottom: 'string', top: 'string' },
-        Parentesis: { expr: 'string' },
+        Parentesis: { expr: 'Node' },
         Punto: {},
-        Fin: {},
+        Fin: {}
+    
           
     };
 

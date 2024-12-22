@@ -214,7 +214,7 @@ export class Rango {
 export class Parentesis {
     /**
      *
-     * @param {string} expr
+     * @param {Node} expr
      */
     constructor(expr) {
         this.expr = expr;

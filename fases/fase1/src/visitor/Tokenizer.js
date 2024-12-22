@@ -1,5 +1,5 @@
 import Visitor from './Visitor.js';
-import { Rango } from './CST.js';
+import { Expresion, Rango } from './CST.js';
 
 export default class Tokenizer extends Visitor {
     generateTokenizer(grammar) {
@@ -94,17 +94,8 @@ end module tokenizer
     }
 
     visitParentesis(node) {
-  
-        return `
-    if ("${node.expr}" == input(cursor:cursor + ${
-            node.expr.length - 1
-        })) then !Foo
-        allocate( character(len=${node.expr.length}) :: lexeme)
-        lexeme = input(cursor:cursor + ${node.expr.length - 1})
-        cursor = cursor + ${node.expr.length}
-        return
-    end if
-        `;
+        console.log("ESTAMOS EN PARENTESIS;",node.expr);
+        return node.expr.accept(this);
     }
     visitPunto(node) {
         return '';
@@ -112,5 +103,11 @@ end module tokenizer
     visitFin(node) {
         return '';
     }
+
+    visitWhiteSpace(node) {
+        console.log("ESTAMOS EN WHITESPACE",node);
+        return '';
+    }
+
 
 }

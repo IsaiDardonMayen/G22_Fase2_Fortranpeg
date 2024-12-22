@@ -50,9 +50,10 @@ expresiones = id:identificador {
   / val:$literales isCase:"i"? {
     return new n.String(val.replace(/['"]/g, ''), isCase);
   }
-  / "(" _ exp:$opciones _ ")"{
-    return new n.Parentesis(exp.replace(/['"]/g, ''));
+  / "(" _ opc:opciones _ ")" {
+    return new n.Parentesis(opc);
   }
+
   / chars:clase isCase:"i"? {
     return new n.Clase(chars, isCase)
   }
@@ -115,7 +116,9 @@ numero = [0-9]+
 
 identificador = [_a-z]i[_a-z0-9]i* { return text() }
 
-_ = (Comentarios / [ \t\n\r])* { return null }
+_ = (Comentarios / whitespace)* { return null }
+
+whitespace = [ \t\n\r] {return null}
 
 Comentarios = 
     "//" [^\n]* 
