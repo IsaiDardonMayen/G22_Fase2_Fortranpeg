@@ -56,7 +56,9 @@ end module tokenizer
     }
 
     generateCaracteres(chars) {
+
         if (chars.length === 0) return '';
+        // si viene un " ", "\t", "\n", "\r" entonces se debe de hacer un if especial
         return `
     if (findloc([${chars
         .map((char) => `"${char}"`)
@@ -92,14 +94,14 @@ end module tokenizer
     }
 
     visitParentesis(node) {
-        
+  
         return `
-    if ("${node.exp}" == input(cursor:cursor + ${
-            node.exp.length - 1
+    if ("${node.expr}" == input(cursor:cursor + ${
+            node.expr.length - 1
         })) then !Foo
-        allocate( character(len=${node.exp.length}) :: lexeme)
-        lexeme = input(cursor:cursor + ${node.exp.length - 1})
-        cursor = cursor + ${node.exp.length}
+        allocate( character(len=${node.expr.length}) :: lexeme)
+        lexeme = input(cursor:cursor + ${node.expr.length - 1})
+        cursor = cursor + ${node.expr.length}
         return
     end if
         `;

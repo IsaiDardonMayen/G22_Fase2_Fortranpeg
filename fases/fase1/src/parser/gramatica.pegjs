@@ -35,7 +35,7 @@ union = expr:expresion rest:(_ @expresion !(_ literales? _ "=") )* {
     return new n.Union([expr, ...rest]);
   }
 
-expresion = label:$(etiqueta/varios)? _ expr:expresiones _ qty:$([?+*]/conteo)? {
+expresion = label:$(etiqueta/varios)? _ expr:expresiones _ qty:$([?+*]/ conteo)? {
     return new n.Expresion(expr, label, qty);
   }
 
@@ -64,7 +64,7 @@ expresiones = id:identificador {
   }
 
 
-conteo = "|" _ (numero / id:identificador) _ "|"
+conteo = "|" _ (numero / id:identificador) _ "|" 
         / "|" _ (numero / id:identificador)? _ ".." _ (numero / id2:identificador)? _ "|"
         / "|" _ (numero / id:identificador)? _ "," _ opciones _ "|"
         / "|" _ (numero / id:identificador)? _ ".." _ (numero / id2:identificador)? _ "," _ opciones _ "|"
@@ -115,7 +115,7 @@ numero = [0-9]+
 
 identificador = [_a-z]i[_a-z0-9]i* { return text() }
 
-_ = (Comentarios /[ \t\n\r])*
+_ = (Comentarios / [ \t\n\r])* { return null }
 
 Comentarios = 
     "//" [^\n]* 
