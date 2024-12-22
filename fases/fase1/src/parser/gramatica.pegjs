@@ -74,6 +74,7 @@ conteo = "|" _ (numero / id:identificador) _ "|"
 // Regla principal que analiza corchetes con contenido
 clase = "[" @contenidoClase+ "]"
 
+
 contenidoClase = bottom:$caracter "-" top:$caracter {
     return new n.Rango(bottom, top);
   }
