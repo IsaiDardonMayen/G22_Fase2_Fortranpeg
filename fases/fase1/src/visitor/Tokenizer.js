@@ -8,6 +8,19 @@ module tokenizer
 implicit none
 
 contains
+subroutine parse(input)
+    integer ::cursor
+    character(len=:), allocatable :: lexeme
+    character(len=:), intent(inout), allocatable :: input
+
+    cursor = 1
+    do while (lexeme /= "EOF" .and. lexeme /= "ERROR")
+        lexeme = nextSym(input, cursor)
+        print *, lexeme
+    end do
+
+
+end subroutine parse
 function nextSym(input, cursor) result(lexeme)
     character(len=*), intent(in) :: input
     integer, intent(inout) :: cursor
