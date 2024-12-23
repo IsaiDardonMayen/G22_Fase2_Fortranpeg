@@ -1,0 +1,25 @@
+subexpresion "Saludos"
+  = "hola, " ("que tal?"i / @etiqueta : "como estas?" / label:'y adios.')
+
+// otro comentario
+
+conjuntos
+  = $[abc]
+  / @[a-z0-9]i
+  / label:[abc0-9ghiA-Z]|label..20|
+
+
+
+unarias
+  = (regla ? regla2)+
+  / regla3* / (regla4 + regla5)*
+
+regla ="regla" / regla2 
+
+regla2 ="regla2"
+
+regla3 ="regla3"
+
+regla4 ="regla4"
+
+regla5 ="regla5"
