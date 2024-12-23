@@ -4,7 +4,7 @@ import { Expresion, Rango } from './CST.js';
 export default class Tokenizer extends Visitor {
     generateTokenizer(grammar) {
         return `
-module tokenizer
+module parser
 implicit none
 
 contains
@@ -38,7 +38,7 @@ function nextSym(input, cursor) result(lexeme)
     print *, "error lexico en col ", cursor, ', "'//input(cursor:cursor)//'"'
     lexeme = "ERROR"
 end function nextSym
-end module tokenizer 
+end module parser 
         `;
     }
 
